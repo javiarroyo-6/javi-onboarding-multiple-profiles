@@ -22,31 +22,33 @@ const bgs = ["#A5BBFF", "#DDBEFE", "#FF63ED", "#B98EFF"];
 const DATA = [
   // one more screen
   {
-    key: "3",
-    title: "Safety In Your Itinerary",
+    key: "1",
+    title: "Easy Medical Care Access",
     description:
-      "Press 'SOS' to call local emergency services and immediately notify your Travel Contacts.",
+      "We've already done all the searching, reviewing and put our best minds and formulas to work so you can just pick and choose from the best medical providers and facilities that speak your language.",
     image: "https://image.flaticon.com/icons/png/512/2038/2038466.png",
   },
   {
     key: "2",
-    title: "Easy Medical Care Access",
+    title: "Shareable and Secure Medical Records",
     description:
-      "Our '2 Taps and Book' appointment booking process keeps it simple (where available)",
+      "It just takes 1 minute to fill out your CarpeMed Health Profile. Send it yourself or your trusted Travel Contacts, password protected and everything.",
     image: "https://image.flaticon.com/icons/png/512/1934/1934464.png",
   },
   {
-    key: "1",
-    title: "Shareable and Secure Medical Records",
+    key: "3",
+    title: "Safety In Your Itinerary",
     description:
-      "Securely share your medical preferences by uploading an existing medical directive or creating one by answering 6 yes or no questions.",
+      "Travel Confidently™ knowing that local emergency services are just a tap away. Your Travel Contacts will be immediately alerted whether they are with you or back home.",
     image: "https://image.flaticon.com/icons/png/512/3770/3770002.png",
   },
 ];
 
 const Square = ({ scrollX }) => {
+  // animation shape
   // shield if possible
   const midTransition = Animated.modulo(
+    // percentage of space between slides
     Animated.divide(Animated.modulo(scrollX, width), new Animated.Value(width)),
     1
   );
@@ -57,6 +59,7 @@ const Square = ({ scrollX }) => {
   });
 
   const translateX = midTransition.interpolate({
+    //x-axis
     inputRange: [0, 0.5, 1],
     outputRange: [0, -height, 0],
   });
@@ -137,14 +140,16 @@ const Backdrop = ({ scrollX }) => {
 };
 
 function OnboardingScreen() {
+  const [nextButton, setNextButton] = React.useState(false);
   const scrollX = React.useRef(new Animated.Value(0)).current;
 
   return (
     <View style={styles.container}>
       <StatusBar hidden />
       <Backdrop scrollX={scrollX} />
-      <Square scrollX={scrollX} />
+      {/* <Square scrollX={scrollX} /> */}
       <Animated.FlatList
+        onEndReached={() => setNextButton(!nextButton)}
         data={DATA}
         keyExtractor={(item) => item.key}
         horizontal
@@ -158,13 +163,8 @@ function OnboardingScreen() {
         contentContainerStyle={{ paddingBottom: 100 }}
         renderItem={({ item }) => {
           return (
-            <View style={{ width, alignItems: "center", padding: 20 }}>
-              <View
-                style={{
-                  flex: 0.7,
-                  justifyContent: "center",
-                }}
-              >
+            <View style={[styles.screenContainer, { width }]}>
+              <View style={styles.imageContainer}>
                 <Image
                   source={{ uri: item.image }}
                   style={{
@@ -174,26 +174,21 @@ function OnboardingScreen() {
                   }}
                 />
               </View>
-              <View style={{ flex: 0.3 }}>
-                <Text
-                  style={{
-                    color: "white",
-                    fontWeight: "800",
-                    fontSize: 24,
-                    marginBottom: 10,
-                  }}
-                >
-                  {item.title}
-                </Text>
-                <Text style={{ color: "white", fontSize: 15 }}>
-                  {item.description}
-                </Text>
+              <View
+                style={{
+                  position: "absolute:",
+                  top: 75,
+                }}
+              >
+                <Text style={styles.titleStyle}>{item.title}</Text>
+                <Text style={styles.subTitleStyle}>{item.description}</Text>
               </View>
             </View>
           );
         }}
       />
       <Indicator scrollX={scrollX} />
+      {nextButton ? <Text> Youve reached then end </Text> : null}
     </View>
   );
 }
@@ -206,5 +201,24 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+  },
+  titleStyle: {
+    color: "#00278B",
+    fontWeight: "bold",
+    fontSize: 24,
+    marginBottom: 10,
+  },
+  subTitleStyle: {
+    color: "#00278B",
+    fontSize: 14,
+  },
+  imageContainer: {
+    flex: 0.7,
+    justifyContent: "center",
+    marginTop: 100,
+  },
+  screenContainer: {
+    alignItems: "center",
+    padding: 20,
   },
 });

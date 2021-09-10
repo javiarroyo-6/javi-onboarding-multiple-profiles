@@ -10,6 +10,7 @@ import {
   Image,
   findNodeHandle,
   TouchableOpacity,
+  Button,
 } from "react-native";
 
 const { width, height } = Dimensions.get("screen");
@@ -68,8 +69,8 @@ const Indicator = ({ measures, scrollX }) => {
       style={{
         position: "absolute",
         height: 4,
-        width: indicatorWidth,
-        backgroundColor: "#00278B",
+        width: 50,
+        backgroundColor: "orange",
         bottom: -10,
         left: 0,
         transform: [
@@ -134,7 +135,7 @@ const Tabs = ({ data, scrollX, onItemPress }) => {
   );
 };
 
-export default function MultipleProfileTabs() {
+export default function MultipleProfileTabs({ navigation }) {
   const scrollX = React.useRef(new Animated.Value(0)).current;
   const ref = React.useRef();
   const onItemPress = React.useCallback((itemIndex) => {
